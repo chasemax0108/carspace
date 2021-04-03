@@ -1,0 +1,41 @@
+[{
+  "_id": {
+    "$oid": "606531c6584a33e78a77d6ff"
+  },
+  "name": "Smooth Rider",
+  "acceleration": "20 mph/s",
+  "price": 1000,
+  "photo": "transmission1.png"
+},{
+  "_id": {
+    "$oid": "60653281584a33e78a77d700"
+  },
+  "name": "Clunker",
+  "acceleration": "5 mph/s",
+  "price": 200,
+  "photo": "transmission2.png"
+},{
+  "_id": {
+    "$oid": "606532a2584a33e78a77d701"
+  },
+  "name": "Top Gear",
+  "acceleration": "30 mph/s",
+  "price": 2500,
+  "photo": "transmission3.png"
+},{
+  "_id": {
+    "$oid": "606532cc584a33e78a77d702"
+  },
+  "name": "Metallic Ice",
+  "acceleration": "35 mph/s",
+  "price": 4000,
+  "photo": "transmission4.png"
+},{
+  "_id": {
+    "$oid": "60653308584a33e78a77d703"
+  },
+  "name": "Ghost Rocket",
+  "acceleration": "9 G",
+  "price": 1500000,
+  "photo": "transmission5.png"
+}]

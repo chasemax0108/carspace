@@ -1,0 +1,46 @@
+[{
+  "_id": {
+    "$oid": "6065292e584a33e78a77d6fa"
+  },
+  "name": "Firebird",
+  "hp": "300 hp",
+  "maxSpeed": "170 mph",
+  "price": 5000,
+  "photo": "enginePhoto1.png"
+},{
+  "_id": {
+    "$oid": "60653091584a33e78a77d6fb"
+  },
+  "name": "Logger",
+  "hp": "250 hp",
+  "maxSpeed": "150 mph",
+  "price": 4000,
+  "photo": "enginePhoto2.png"
+},{
+  "_id": {
+    "$oid": "60653119584a33e78a77d6fc"
+  },
+  "name": "Dinker",
+  "hp": "150 hp",
+  "maxSpeed": "100 mph",
+  "price": 1000,
+  "photo": "enginePhoto3.png"
+},{
+  "_id": {
+    "$oid": "6065314f584a33e78a77d6fd"
+  },
+  "name": "Warp Drive",
+  "hp": "100000 hp",
+  "maxSpeed": "5000 mph",
+  "price": 2000000,
+  "photo": "enginePhoto4.png"
+},{
+  "_id": {
+    "$oid": "6065317d584a33e78a77d6fe"
+  },
+  "name": "Cruiser",
+  "hp": "280 hp",
+  "maxSpeed": "160 mph",
+  "price": 4500,
+  "photo": "enginePhoto5.png"
+}]
