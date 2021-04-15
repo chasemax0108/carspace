@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <div class="intro">
+    <div class="login-please warning" v-if="!user">
+      <h1>Please log in or register to continue using CarSpace</h1>
+    </div>
+    <div class="intro" v-if="user">
       <h1><em>Begin building your own sweet ride</em></h1>
       <div class="car-selector">
         <h2>Pick a car to add parts to:</h2>
@@ -10,10 +13,10 @@
         </select>
       </div>
     </div>
-    <div v-if="!current_car" class="warning">
+    <div v-if="!current_car && user" class="warning">
       <h1>Select a car to begin adding parts</h1>
     </div>
-    <div v-else class="parts-list">
+    <div v-if="current_car && user" class="parts-list">
       <div class="part-item" :class="{ selected : current_car.engine == engine._id}" v-for="engine in engines" :key="engine._id" @click="editEngineOnCar(engine)">
         <h1>{{engine.name}}</h1>
         <img :src="getImgUrl(engine.photo)">
@@ -78,6 +81,12 @@ export default {
     this.getCars();
     this.getEngines();
     this.getTransmissions();
+  },
+
+  computed: {
+    user() {
+      return this.$root.$data.user;
+    }
   },
 
   methods: {

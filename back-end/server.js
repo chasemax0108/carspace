@@ -15,6 +15,23 @@ mongoose.connect('mongodb://localhost:27017/carspace', {
     useUnifiedTopology: true
 });
 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+const cookieSession = require('cookie-session');
+app.use(cookieSession({
+    name: 'session',
+    keys: ['secretValue'],
+    cookie: {
+        maxAge: 24*60*60*1000
+    }
+}));
+
+const users = require("./users.js");
+app.use("/api/users", users.routes);
+const User = users.model;
+const validUser = users.valid;
+
 const engineSchema = new mongoose.Schema({
     name: String,
     hp: String,
@@ -41,6 +58,10 @@ const carSchema = new mongoose.Schema({
     transmission: {
         type: mongoose.Schema.ObjectId,
         ref: 'Transmission'
+    },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
     }
 });
 
@@ -48,13 +69,20 @@ const Car = mongoose.model('Car', carSchema);
 const Engine = mongoose.model('Engine', engineSchema);
 const Transmission = mongoose.model('Transmission', transmissionSchema);
 
-app.post('/api/cars', async (req, res) => {
+
+/*/////////////////////////////////////////////////////////////////////////////////////////
+
+                                ENDPOINTS
+
+*////////////////////////////// POST A NEW CAR //////////////////////////////////
+app.post('/api/cars', validUser, async (req, res) => {
     const car = new Car({
         name: req.body.name,
         color: req.body.color,
         price: 10000,
         engine: null,
-        transmission: null
+        transmission: null,
+        user: req.user
     });
     try {
         await car.save();
@@ -66,9 +94,10 @@ app.post('/api/cars', async (req, res) => {
     }
 });
 
-app.put('/api/cars/:carid', async (req, res) => {
+/////////////////////////////// UPDATE A CAR /////////////////////////////////////
+app.put('/api/cars/:carid', validUser, async (req, res) => {
     try {
-        let car = await Car.findOne({_id:req.params.carid});
+        let car = await Car.findOne({_id:req.params.carid, user:req.user});
         if (!car) {
             res.send(404);
             return;
@@ -84,9 +113,12 @@ app.put('/api/cars/:carid', async (req, res) => {
     }
 })
 
-app.get('/api/cars', async (req, res) => {
+//////////////////////////// GET ALL CARS /////////////////////////////////
+app.get('/api/cars', validUser, async (req, res) => {
     try {
-        let cars = await Car.find();
+        let cars = await Car.find({
+            user: req.user
+        });
         res.send(cars);
     } catch (error) {
         console.log(error);
@@ -94,6 +126,7 @@ app.get('/api/cars', async (req, res) => {
     }
 });
 
+/////////////////////////// GET ALL ENGINES //////////////////////////////
 app.get('/api/engines', async (req, res) => {
     try {
         let engines = await Engine.find();
@@ -104,6 +137,7 @@ app.get('/api/engines', async (req, res) => {
     }
 });
 
+///////////////////////// GET ALL TRANSMISSIONS ///////////////////////////
 app.get('/api/transmissions', async (req, res) => {
     try {
         let transmissions = await Transmission.find();
@@ -114,7 +148,8 @@ app.get('/api/transmissions', async (req, res) => {
     }
 });
 
-app.put('/api/cars/:carid/engine/:engineid', async (req, res) => {
+///////////////////////// ADD ENGINE TO A CAR ////////////////////////////
+app.put('/api/cars/:carid/engine/:engineid', validUser, async (req, res) => {
     try {
         let engine = await Engine.findOne({_id:req.params.engineid});
         if (!engine) {
@@ -122,7 +157,7 @@ app.put('/api/cars/:carid/engine/:engineid', async (req, res) => {
             console.log("Engine not found");
             return;
         }
-        let car = await Car.findOne({_id:req.params.carid});
+        let car = await Car.findOne({_id:req.params.carid, user: req.user});
         if (!car) {
             res.send(404);
             console.log("Car not found");
@@ -143,9 +178,10 @@ app.put('/api/cars/:carid/engine/:engineid', async (req, res) => {
     }
 });
 
-app.delete('/api/cars/:carid/engine', async (req, res) => {
+//////////////////////////// REMOVE ENGINE FROM A CAR /////////////////////
+app.delete('/api/cars/:carid/engine', validUser, async (req, res) => {
     try {
-        let car = await Car.findOne({_id:req.params.carid});
+        let car = await Car.findOne({_id:req.params.carid, user:req.user});
         if (!car) {
             res.send(404);
             return;
@@ -164,14 +200,15 @@ app.delete('/api/cars/:carid/engine', async (req, res) => {
     }
 });
 
-app.put('/api/cars/:carid/transmission/:transmissionid', async (req, res) => {
+///////////////////////////// ADD TRANSMISSION TO A CAR ////////////////////////
+app.put('/api/cars/:carid/transmission/:transmissionid', validUser, async (req, res) => {
     try {
         let transmission = await Transmission.findOne({_id:req.params.transmissionid});
         if (!transmission) {
             res.send(404);
             return;
         }
-        let car = await Car.findOne({_id:req.params.carid});
+        let car = await Car.findOne({_id:req.params.carid, user:req.user});
         if (!car) {
             res.send(404);
             return;
@@ -191,9 +228,10 @@ app.put('/api/cars/:carid/transmission/:transmissionid', async (req, res) => {
     }
 });
 
-app.delete('/api/cars/:carid/transmission', async (req, res) => {
+///////////////////////////// REMOVE TRANSMISSION FROM A CAR ///////////////////////////////
+app.delete('/api/cars/:carid/transmission', validUser, async (req, res) => {
     try {
-        let car = await Car.findOne({_id:req.params.carid});
+        let car = await Car.findOne({_id:req.params.carid, user:req.user});
         if (!car) {
             res.send(404);
             return;
@@ -213,9 +251,10 @@ app.delete('/api/cars/:carid/transmission', async (req, res) => {
     }
 });
 
-app.delete('/api/cars/:carid', async (req, res) => {
+//////////////////////////////// DELETE A CAR /////////////////////////////////////////
+app.delete('/api/cars/:carid', validUser, async (req, res) => {
     try {
-        let car = await Car.findOne({_id:req.params.carid});
+        let car = await Car.findOne({_id:req.params.carid, user:req.user});
         if (!car) {
             res.send(404);
             return;

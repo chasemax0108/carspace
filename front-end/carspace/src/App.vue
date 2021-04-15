@@ -7,15 +7,31 @@
       <div id="nav">
         <router-link class="navButton" to="/">MY CARS</router-link>
         <router-link class="navButton" to="/parts">PARTS</router-link>
-        <!--Insert your last navButton for login here-->
+        <router-link class="navButton" to="/login">LOGIN</router-link>
       </div>
       <router-view/>
       <footer>
         Find the code for this website on <a href="https://github.com/chasemax0108/carspace">Github</a>
+        <p>I spent 5 hours on the final project portion of this website</p>
       </footer>
     </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios';
+export default {
+  async created() {
+    try {
+      let response = await axios.get('/api/users');
+      this.$root.$data.user = response.data.user;
+    } catch (error) {
+      this.$root.$data.user = null;
+    }
+  }
+}
+</script>
+
 
 <style>
 * {

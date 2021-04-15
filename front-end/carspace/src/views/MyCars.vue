@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <div class="intro">
+    <div class="login-please warning" v-if="!user">
+      <h1>Please log in or register to continue using CarSpace</h1>
+    </div>
+    <div class="intro" v-if="user">
       <h1>Create your custom car</h1>
       <div class="car-selector-2">
         <div class="select-car">
@@ -80,6 +83,12 @@ export default {
     this.getCars();
     this.getEngines();
     this.getTransmissions();
+  },
+
+  computed: {
+    user() {
+      return this.$root.$data.user;
+    }
   },
 
   methods: {
