@@ -22,9 +22,9 @@
                 <input class="reglogin-button" type="submit" value="Log In">
             </form>
         </div>
-        <div class="logged-in" v-if="user">
+        <div class="reglogin-form" v-if="user">
             <h2>You are currently logged in as: {{user.firstName}} {{user.lastName}}</h2>
-            <button @click="logout()">Logout</button>
+            <button class="reglogin-button" @click="logout()">Logout</button>
         </div>
     </div>
 </template>
